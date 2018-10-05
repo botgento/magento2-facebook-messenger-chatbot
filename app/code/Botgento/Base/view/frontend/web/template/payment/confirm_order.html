@@ -1,0 +1,29 @@
+<!--/**
+* @author Botgento Team
+* @copyright Copyright (c) 2017 Botgento (https://www.botgento.com)
+* @package Botgento_Base
+*/-->
+
+<!--/**
+* Copyright © 2017 Botgento. All rights reserved.
+*/-->
+
+<!-- ko if: status && send_order_cnf == '1' -->
+<form data-role="botgento_order" method="post" data-bind="fadeVisible: isVisible()">
+    <div class="col-md-12">
+        <!-- ko if: subscribed != '1' -->
+        <h2><!-- ko i18n:'Send order updates on:' --><!-- /ko --></h2>
+        <!-- /ko -->
+        <div data-bind="visible: gifVisible()">
+            <img src="" data-bind="attr: { src: loaderImg }" style="width: 48px;"/></div>
+        <div class="fb-messenger-checkbox"
+             origin="" page_id="" messenger_app_id="" prechecked="false" allow_login="true" size="small"
+             data-bind="attr: {'origin': origin, 'page_id': page_id, 'messenger_app_id': app_id,
+             'user_ref': repId, 'data-ref': refId }">
+        </div>
+        <input type="hidden" name="fb_checked" value="unchecked" data-bind="value: fb_state()"/>
+        <input type="hidden" name="ref_id" value="" data-bind="value: refId">
+        <input type="hidden" name="rep_id" value="" data-bind="value: repId">
+    </div>
+</form>
+<!-- /ko -->

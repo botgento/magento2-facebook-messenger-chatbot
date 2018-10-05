@@ -1,0 +1,27 @@
+<?php
+/**
+ * @author Botgento Team
+ * @copyright Copyright (c) 2017 Botgento (https://www.botgento.com)
+ * @package Botgento_Base
+ */
+
+/**
+ * Copyright © 2017 Botgento. All rights reserved.
+ */
+$helper = $this->helper('Botgento\Base\Helper\Data');
+$moduleEnable = $helper->getModuleIsEnableAndValid();
+
+if ($moduleEnable) {
+?>
+<div class="fb_message_button" data-bind="scope:'botgento-analysis'">
+    <div id="main_body" data-bind="html: button"></div>
+</div>
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Ui/js/core/app": <?php /* @escapeNotVerified */ echo $block->getJsLayout();?>
+    }
+}
+</script>
+
+<?php } ?>

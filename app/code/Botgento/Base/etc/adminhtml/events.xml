@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @author Botgento Team
+* @copyright Copyright (c) 2017 Botgento (https://www.botgento.com)
+* @package Botgento_Base
+*/
+-->
+<!--
+/**
+* Copyright © 2017 Botgento. All rights reserved.
+*/
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="admin_system_config_changed_section_botgento_base">
+        <observer name="botgento_base_save_config" instance="Botgento\Base\Observer\SaveConfig" />
+    </event>
+</config>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @author Botgento Team
+* @copyright Copyright (c) 2017 Botgento (https://www.botgento.com)
+* @package Botgento_Base
+*/
+-->
+<!--
+/**
+* Copyright © 2017 Botgento. All rights reserved.
+*/
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="standard">
+        <route id="botgento" frontName="botgento">
+            <module name="Botgento_Base" />
+        </route>
+    </router>
+</config>

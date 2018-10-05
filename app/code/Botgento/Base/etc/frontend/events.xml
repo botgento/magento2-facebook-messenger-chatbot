@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @author Botgento Team
+* @copyright Copyright (c) 2017 Botgento (https://www.botgento.com)
+* @package Botgento_Base
+*/
+-->
+<!--
+/**
+* Copyright © 2017 Botgento. All rights reserved.
+*/
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_quote_save_after">
+        <observer name="botgento_base_sales_quote_save_after" instance="Botgento\Base\Observer\QuoteSaveAfter" />
+    </event>
+    <event name="load_customer_quote_before">
+        <observer name="botgento_load_customer_quote_before" instance="Botgento\Base\Observer\LoadCustomerQuoteBefore" />
+    </event>
+</config>

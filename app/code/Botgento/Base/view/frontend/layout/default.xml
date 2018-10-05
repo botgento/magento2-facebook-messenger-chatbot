@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @author Botgento Team
+* @copyright Copyright (c) 2017 Botgento (https://www.botgento.com)
+* @package Botgento_Base
+*/
+-->
+<!--
+/**
+* Copyright © 2017 Botgento. All rights reserved.
+*/
+-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Botgento_Base::css/custom.css"/>
+    </head>
+    <body>
+        <referenceBlock name="head.additional">
+            <block class="Magento\Framework\View\Element\Template" name="botgento-extra-head" template="Botgento_Base::extra_head.phtml" cacheable="false"/>
+        </referenceBlock>
+        <!--<referenceContainer name="before.body.end">
+                <block class="Botgento\Base\Block\FbButtonBlock" name="fb.set-message-button"
+                       as="set-message-button" after="-" template="Botgento_Base::fb_button.phtml"
+                       ifconfig="botgento_base/base/status">
+                    <arguments>
+                        <argument name="jsLayout" xsi:type="array">
+                            <item name="components" xsi:type="array">
+                                <item name="botgento-analysis" xsi:type="array">
+                                    <item name="component" xsi:type="string">Botgento_Base/js/view/page/botgento-analysis</item>
+                                </item>
+                            </item>
+                        </argument>
+                    </arguments>
+                </block>
+        </referenceContainer>-->
+    </body>
+</page>

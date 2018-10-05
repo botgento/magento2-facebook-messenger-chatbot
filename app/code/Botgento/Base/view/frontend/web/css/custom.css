@@ -1,0 +1,21 @@
+/**
+ * Botgento
+ *
+ * @category    Botgento
+ * @package     Botgento_Base
+ * @author      Botgento Team <support@botgento.com>
+ * @copyright   Botgento (https://www.botgento.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+
+.botgento-instock-alert {
+    border: 1px solid rgba(204, 204, 204, 0.3);
+    padding: 10px;
+    border-radius: 4px;
+    clear: both;
+}
+
+.botgento-instock-alert-text {
+    font-size: 12px;
+    margin-bottom: 5px;
+}

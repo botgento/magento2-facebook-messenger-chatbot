@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @author Botgento Team
+* @copyright Copyright (c) 2017 Botgento (https://www.botgento.com)
+* @package Botgento_Base
+*/
+-->
+<!--
+/**
+* Copyright © 2017 Botgento. All rights reserved.
+*/
+-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="billing-step" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="payment" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="additional-payment-validators" xsi:type="array">
+                                                            <item name="component" xsi:type="string">uiComponent</item>
+                                                            <item name="children" xsi:type="array">
+                                                                <!-- merge payment validators here -->
+                                                                <item name="fb-checkbox-validator" xsi:type="array">
+                                                                    <item name="sortOrder" xsi:type="string">9999</item>
+                                                                    <item name="component" xsi:type="string">Botgento_Base/js/view/payment/fb-checkbox-validator</item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                        <item name="beforeMethods" xsi:type="array">
+                                                            <!-- merge payment method renders here -->
+                                                            <item name="component" xsi:type="string">uiComponent</item>
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="botgento_order" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Botgento_Base/js/view/payment/botgento</item>
+                                                                    <item name="displayArea" xsi:type="string">beforeMethods</item>
+                                                                    <item name="dataScope" xsi:type="string">botgento_order</item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

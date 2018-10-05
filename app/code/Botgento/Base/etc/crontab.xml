@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @author Botgento Team
+* @copyright Copyright (c) 2017 Botgento (https://www.botgento.com)
+* @package Botgento_Base
+*/
+-->
+<!--
+/**
+* Copyright © 2017 Botgento. All rights reserved.
+*/
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="index">
+        <job name="botgento_cron_order_send" instance="Botgento\Base\Cron\SendOrderData" method="execute">
+            <schedule>*/1 * * * *</schedule>
+        </job>
+        <job name="botgento_sync_data" instance="Botgento\Base\Cron\SyncData" method="execute">
+            <schedule>*/5 * * * *</schedule>
+        </job>
+        <job name="botgento_instock_alert" instance="Botgento\Base\Cron\SendInStockAlertData" method="execute">
+            <schedule>*/30 * * * *</schedule>
+        </job>
+    </group>
+</config>

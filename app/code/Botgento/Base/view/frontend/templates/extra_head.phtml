@@ -1,0 +1,38 @@
+<?php
+/**
+ * @author Botgento Team
+ * @copyright Copyright (c) 2017 Botgento (https://www.botgento.com)
+ * @package Botgento_Base
+ */
+
+/**
+ * Copyright © 2017 Botgento. All rights reserved.
+ */
+$helper = $this->helper('Botgento\Base\Helper\Data');
+$moduleEnable = $helper->getModuleIsEnableAndValid();
+
+if ($moduleEnable) {
+
+    $uuid = $helper->getUuid();
+    $output = $helper->genBGCValue();
+    ?>
+    <script type="text/javascript">
+        var bgc = "<?php echo $output ?>";
+        var bgc_uuid = "<?php echo $uuid ?>";
+        var setBgc = '';
+
+        require(['jquery'], function ($) {
+            setBgc = function () {
+                $.ajax({
+                    url: "<?php echo $this->getUrl('botgento/demo/bgc') ?>",
+                    headers: {'Authorization': "<?php echo $helper->getApiToken();?>"},
+                    success: function (xhr) {
+                        // console.log(xhr);
+                    }
+                });
+            }
+
+        });
+    </script>
+
+<?php } ?>

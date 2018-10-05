@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @author Botgento Team
+* @copyright Copyright (c) 2017 Botgento (https://www.botgento.com)
+* @package Botgento_Base
+*/
+-->
+<!--
+/**
+* Copyright © 2017 Botgento. All rights reserved.
+*/
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="botgento_base" translate="label" sortOrder="450">
+            <label><![CDATA[<span class="botgento-logo">Botgento</span>]]></label>
+        </tab>
+        <section id="botgento_base" translate="label" type="text" sortOrder="450" showInDefault="1" showInStore="1" showInWebsite="1">
+            <label>Botgento</label>
+            <tab>botgento_base</tab>
+            <resource>Botgento_Base::base</resource>
+            <group id="hint" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <frontend_model>Botgento\Base\Block\Adminhtml\System\Config\Fieldset\Hint</frontend_model>
+            </group>
+            <group id="comments" translate="label comment" sortOrder="0" showInDefault="1" showInStore="1" showInWebsite="1">
+                <label>General Settings</label>
+                <comment><![CDATA[<strong>IMPORTANT:</strong><br/><strong>To See Botgento Configuration, Change the <strong style="color:red;">Current Configuration Scope</strong> to Website.</strong><br/>If you want to change the botgento configuration you need to select website from Current Configuration Scope.<br/><br/>]]></comment>
+                <field id="hidden" type="label" sortOrder="0" showInDefault="1" showInStore="1" showInWebsite="0">
+                    <frontend_model>Botgento\Base\Block\System\Config\Field\Hide</frontend_model>
+                </field>
+            </group>
+            <group id="base" translate="label" sortOrder="10" showInDefault="0" showInStore="0" showInWebsite="1">
+                <label>General Settings</label>
+                <field id="status" translate="label comment" type="select" sortOrder="0" showInDefault="0" showInStore="0" showInWebsite="1">
+                    <label>Enabled</label>
+                    <validate>number</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                    <comment><![CDATA[Botgento API token. This field will automatically populated once you connect Facebook page in Botgento portal]]></comment>
+                </field>
+                <field id="api_token" translate="label comment" type="text" sortOrder="10" showInDefault="0" showInStore="0" showInWebsite="1">
+                    <label>API Token</label>
+                    <frontend_model>Botgento\Base\Block\System\Config\Field\ApiToken</frontend_model>
+                </field>
+                <field id="checkbox_enable" translate="label comment" type="select" sortOrder="30" showInDefault="0" showInStore="0" showInWebsite="1">
+                    <label>Enable Facebook Checkbox Plugin</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <validate>number</validate>
+                    <depends>
+                        <field id="status">1</field>
+                    </depends>
+                    <comment><![CDATA[If enabled, Facebook Checkbox appears inside Order Review step of the checkout page. It helps users to Opt-in for Facebook messenger updates.]]></comment>
+                </field>
+                <!--<field id="facebook_button" translate="label comment" type="select" sortOrder="30" showInDefault="0" showInStore="0" showInWebsite="1">
+                    <label>Enable Facebook Button</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <validate>number</validate>
+                    <depends>
+                        <field id="status">1</field>
+                    </depends>
+                    <comment><![CDATA[If enabled, your Facebook chatbot link button will be displayed on your storefront.]]></comment>
+                </field>-->
+            </group>
+            <group id="order" translate="label" sortOrder="20" showInDefault="0" showInStore="0" showInWebsite="1">
+                <label>Transaction Message Configuration</label>
+                <field id="snd_ord_confirmation" translate="label comment" type="select" sortOrder="20" showInDefault="0" showInStore="0" showInWebsite="1">
+                    <label>Send Order Confirmation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <validate>number</validate>
+                    <depends>
+                        <field id="status">1</field>
+                    </depends>
+                </field>
+                <field id="snd_order_cnf_seconds" translate="label comment" type="text" sortOrder="30" showInDefault="0" showInStore="0" showInWebsite="1">
+                    <label>Send Order Confirmation After</label>
+                    <comment><![CDATA[In Seconds]]></comment>
+                    <validate>number</validate>
+                </field>
+                <field id="snd_shipment_detail" translate="label comment" type="select" sortOrder="40" showInDefault="0" showInStore="0" showInWebsite="1">
+                    <label>Send Shipment Details</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <validate>number</validate>
+                    <depends>
+                        <field id="status">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="instock" translate="label" sortOrder="20" showInDefault="0" showInStore="0" showInWebsite="1">
+                <label>Back In Stock Alert Configuration</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="0" showInStore="0" showInWebsite="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="button_text" translate="label comment" type="select" sortOrder="20" showInDefault="0" showInStore="0" showInWebsite="1">
+                    <label>Button Text</label>
+                    <source_model>Botgento\Base\Model\Config\Source\ButtonText</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="button_color" translate="label comment" type="select" sortOrder="30" showInDefault="0" showInStore="0" showInWebsite="1">
+                    <label>Button Color</label>
+                    <source_model>Botgento\Base\Model\Config\Source\ButtonColor</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="button_size" translate="label comment" type="select" sortOrder="30" showInDefault="0" showInStore="0" showInWebsite="1">
+                    <label>Button Size</label>
+                    <source_model>Botgento\Base\Model\Config\Source\ButtonSize</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
