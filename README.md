@@ -49,7 +49,7 @@ Botgento builds a higher engagement that can boost the sales up. The main reason
 Visit our [FAQ](https://www.botgento.com/faq) section.
 
 ## Configuration and Troubleshooting  ##
-If you experience problems with the extension installation, setup or whenever you need more information about how to setup the Botgento extension in Magento 1.x, refer our [WIKI Page](https://github.com/botgento/magento2-facebook-messenger-chatbot/wiki) or sent an e-mail to [support@botgento.com](mailto:support@botgento.com) with an exact description of the problem.
+If you experience problems with the extension installation, setup or whenever you need more information about how to setup the Botgento extension in Magento 2.x, refer our [WIKI Page](https://github.com/botgento/magento2-facebook-messenger-chatbot/wiki) or sent an e-mail to [support@botgento.com](mailto:support@botgento.com) with an exact description of the problem.
 
 ## License ##
 [OSL (Open Software License) License 3.0](https://opensource.org/licenses/OSL-3.0).
