@@ -1,5 +1,5 @@
 {
-    "name": "botgento/base-magento2-extension",
+    "name": "botgento/facebook-messenger-chatbot",
     "description": "A Magento 2 module to integrate a full-featured chatbot for Magento website within 5 minutes. Zero coding skill required",
     "type": "magento2-module",
     "version": "1.1.0",
