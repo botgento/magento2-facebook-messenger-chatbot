@@ -8,31 +8,10 @@
 /**
  * Copyright © 2017 Botgento. All rights reserved.
  */
-$helper = $this->helper('Botgento\Base\Helper\Data');
-$moduleEnable = $helper->getModuleIsEnableAndValid();
-
-if ($moduleEnable) {
-
-    $uuid = $helper->getUuid();
-    $output = $helper->genBGCValue();
-    ?>
-    <script type="text/javascript">
-        var bgc = "<?php echo $output ?>";
-        var bgc_uuid = "<?php echo $uuid ?>";
-        var setBgc = '';
-
-        require(['jquery'], function ($) {
-            setBgc = function () {
-                $.ajax({
-                    url: "<?php echo $this->getUrl('botgento/demo/bgc') ?>",
-                    headers: {'Authorization': "<?php echo $helper->getApiToken();?>"},
-                    success: function (xhr) {
-                        // console.log(xhr);
-                    }
-                });
-            }
-
-        });
-    </script>
-
-<?php } ?>
+?>
+<span class="block" data-bind="scope: 'botgentoApi'" data-role="botgento-api"><span>
+<script type="text/javascript">var bgc = ''; var bgc_uuid = ''; var setBgc = ''; var bgc_csrf = '';</script>
+</span></span>
+<script type="text/x-magento-init">
+{"*": {"Magento_Ui/js/core/app": <?php /* @escapeNotVerified */ echo $block->getJsLayout();?>}}
+</script>

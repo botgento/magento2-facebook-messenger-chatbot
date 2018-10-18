@@ -18,7 +18,17 @@
     </head>
     <body>
         <referenceBlock name="head.additional">
-            <block class="Magento\Framework\View\Element\Template" name="botgento-extra-head" template="Botgento_Base::extra_head.phtml" cacheable="false"/>
+            <block class="Magento\Framework\View\Element\Template" name="botgento-extra-head" template="Botgento_Base::extra_head.phtml">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="botgentoApi" xsi:type="array">
+                                <item name="component" xsi:type="string">Botgento_Base/js/botgentoapi</item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
         </referenceBlock>
         <!--<referenceContainer name="before.body.end">
                 <block class="Botgento\Base\Block\FbButtonBlock" name="fb.set-message-button"
