@@ -279,6 +279,17 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $installer->getConnection()->createTable($table);
         }
 
+        if (version_compare($version, '1.1.6') < 0) {
+            $connection->addColumn(
+                $installer->getTable('al_botgento_subscriber_quote_mapping'),
+                'user_ref',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'comment' => 'User Ref'
+                ]
+            );
+        }
+
         $installer->endSetup();
     }
 }

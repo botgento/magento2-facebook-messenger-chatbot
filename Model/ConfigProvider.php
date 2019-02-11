@@ -18,7 +18,8 @@ use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Payment\Model\CcConfig;
 use \Magento\Payment\Model\CcGenericConfigProvider;
 use \Magento\Store\Model\ScopeInterface;
-use \Magento\Customer\Model\Session\Proxy as CustomerSession;
+use Magento\Customer\Helper\Session\CurrentCustomer;
+use \Magento\Checkout\Model\Cart;
 
 /**
  * Class ConfigProvider
@@ -26,6 +27,10 @@ use \Magento\Customer\Model\Session\Proxy as CustomerSession;
  */
 class ConfigProvider extends CcGenericConfigProvider
 {
+    /**
+     * @var Cart
+     */
+    public $cart;
     /**
      * @var ScopeConfigInterface
      */
@@ -49,20 +54,25 @@ class ConfigProvider extends CcGenericConfigProvider
 
     /**
      * ConfigProvider constructor.
+     * @param CcConfig $ccConfig
+     * @param PaymentHelper $paymentHelper
      * @param ScopeConfigInterface $scopeConfig
      * @param RecipientRepository $recipientRepo
-     * @param CustomerSession $session
+     * @param CurrentCustomer $session
      * @param Helper $helper
      * @param UrlInterface $url
+     * @param Cart $cart
+     * @param array $methodCodes
      */
     public function __construct(
         CcConfig $ccConfig,
         PaymentHelper $paymentHelper,
         ScopeConfigInterface $scopeConfig,
         RecipientRepository $recipientRepo,
-        CustomerSession $session,
+        CurrentCustomer $session,
         Helper $helper,
         UrlInterface $url,
+        Cart $cart,
         array $methodCodes = []
     ) {
         $this->scopeConfig      = $scopeConfig;
@@ -70,6 +80,7 @@ class ConfigProvider extends CcGenericConfigProvider
         $this->session          = $session;
         $this->helper           = $helper;
         $this->url              = $url;
+        $this->cart = $cart;
         parent::__construct($ccConfig, $paymentHelper, $methodCodes);
     }
 
@@ -95,56 +106,58 @@ class ConfigProvider extends CcGenericConfigProvider
         );
         if ($status && $fbButton) {
             $subscribed = 0;
-            if ($this->session->isLoggedIn()) {
-                $row = $this->recipientRepo->getByCustomerId($this->session->getCustomer()->getId());
+            $pageArr = null;
+            if ($this->session->getCustomerId()) {
+                $row = $this->recipientRepo->getByCustomerId($this->session->getCustomerId());
                 if (!is_bool($row)) {
-                    $refId = rand(100000, 999999);
-                    $recipientId = $row->getRecipientId();
-                    $subscribed = 1;
-                } else {
-                    $refId = rand(100000, 999999);
-                    $recipientId = $refId;
+                    $subscribed = true;
                 }
-            } else {
-                $refId = rand(100000, 999999);
-                $recipientId = $refId;
             }
-            $myConfig = [
+            $pageArr = [
+                'page_uri' => $this->url->getCurrentUrl(),
+                'quote_id' => $this->cart->getQuote()->getId()
+            ];
+            $userRef = $this->helper->generateUserRef($pageArr);
+            $configAr = [
                 'botgento' => [
                     'config' => [
                         'status' => (boolean)$this->scopeConfig->getValue(
                             $helper->getStatusPath(),
                             ScopeInterface::SCOPE_WEBSITE,
                             $websiteId
-                        ),
-                        'send_order_cnf' => $this->scopeConfig->getValue(
-                            $helper->getSendOrderCnfPath(),
-                            ScopeInterface::SCOPE_WEBSITE,
-                            $websiteId
-                        ),
-                        'send_ship_detail' => $this->scopeConfig->getValue(
-                            $helper->getSendOrderShipPath(),
-                            ScopeInterface::SCOPE_WEBSITE,
-                            $websiteId
-                        ),
-                        'ref_id' => $refId,
-                        'recipientId' => $recipientId,
-                        'origin' => $this->url->getBaseUrl(),
-                        'app_id' => $this->scopeConfig->getValue(
-                            $helper->getAppIdPath(),
-                            ScopeInterface::SCOPE_WEBSITE,
-                            $websiteId
-                        ),
-                        'page_id' => $this->scopeConfig->getValue(
-                            $helper->getPageIdPath(),
-                            ScopeInterface::SCOPE_WEBSITE,
-                            $websiteId
-                        ),
-                        'subscribed' => $subscribed
+                        )
                     ]
                 ]
             ];
-            $config = array_merge_recursive($config, $myConfig);
+            if ($configAr['botgento']['config']['status'] === true) {
+                $configAr['botgento']['config'] = [
+                    'status' => true,
+                    'send_order_cnf' => $this->scopeConfig->getValue(
+                        $helper->getSendOrderCnfPath(),
+                        ScopeInterface::SCOPE_WEBSITE,
+                        $websiteId
+                    ),
+                    'send_ship_detail' => $this->scopeConfig->getValue(
+                        $helper->getSendOrderShipPath(),
+                        ScopeInterface::SCOPE_WEBSITE,
+                        $websiteId
+                    ),
+                    'user_ref' => $userRef,
+                    'origin' => $this->url->getBaseUrl(),
+                    'app_id' => $this->scopeConfig->getValue(
+                        $helper->getAppIdPath(),
+                        ScopeInterface::SCOPE_WEBSITE,
+                        $websiteId
+                    ),
+                    'page_id' => $this->scopeConfig->getValue(
+                        $helper->getPageIdPath(),
+                        ScopeInterface::SCOPE_WEBSITE,
+                        $websiteId
+                    ),
+                    'subscribed' => $subscribed
+                ];
+            }
+            $config = array_merge_recursive($config, $configAr);
         }
         return $config;
     }

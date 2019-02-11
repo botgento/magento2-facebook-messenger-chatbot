@@ -15,6 +15,8 @@ define([
 
     return Component.extend({
         botgentoApi: ko.observable(false),
+        changed: ko.observable(false),
+        script: '',
         /** @inheritdoc */
         initialize: function () {
             var self = this;
@@ -27,22 +29,22 @@ define([
                     if (self.botgentoApi().status === false) {
                         return;
                     }
+                    self.changed(true);
                     bgc_uuid = self.botgentoApi().bgc_uuid;
                     bgc_csrf = self.botgentoApi().bgc_csrf;
                     bgc = self.botgentoApi().bgc;
-                }
-            );
+                });
             setBgc = function () {
                 if (self.botgentoApi().status === false) {
                     return false;
                 }
-                return $.ajax({
+                /*return $.ajax({
                     url: self.botgentoApi().bgc_url,
                     headers: {'Authorization': self.botgentoApi().bgc_csrf},
                     success: function (xhr) {
                         // console.log(xhr);
                     }
-                });
+                });*/
             };
         }
     });

@@ -20,8 +20,8 @@
                 </arguments>
             </block>
         </referenceContainer>
-        <referenceContainer name="product.info.form.content">
-            <block class="Botgento\Base\Block\Product" name="product_abandon_cart" template="Botgento_Base::abandoncart_product.phtml" before="product.info.addtocart">
+        <referenceContainer name="product.info.main">
+            <block class="Botgento\Base\Block\Product" name="product_abandon_cart" template="Botgento_Base::abandoncart_product.phtml" after="-">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">

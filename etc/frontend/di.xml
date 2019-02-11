@@ -24,6 +24,19 @@
         <arguments>
             <argument name="sectionSourceMap" xsi:type="array">
                 <item name="botgento-api" xsi:type="string">Botgento\Base\CustomerData\FbButton</item>
+                <item name="abandon-cart" xsi:type="string">Botgento\Base\CustomerData\AbandonCart</item>
+                <item name="in-stock" xsi:type="string">Botgento\Base\CustomerData\InStockAlert</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\App\RouterList" shared="true">
+        <arguments>
+            <argument name="routerList" xsi:type="array">
+                <item name="botgento" xsi:type="array">
+                    <item name="class" xsi:type="string">Botgento\Base\Controller\Router</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="string">10</item>
+                </item>
             </argument>
         </arguments>
     </type>

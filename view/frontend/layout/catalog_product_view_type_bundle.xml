@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <referenceContainer name="alert.urls">
+        <block class="Magento\Catalog\Block\Product\View" name="botgento_product_outofstock_button" after="-" template="Botgento_Base::outofstock.phtml">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="in-stock" xsi:type="array">
+                            <item name="component" xsi:type="string">Botgento_Base/js/view/in_stock</item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </block>
+    </referenceContainer>
+    <referenceBlock name="bundle.summary">
+        <block class="Botgento\Base\Block\Product" name="product_abandon_cart" template="Botgento_Base::abandoncart_product.phtml" before="-">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="abandonCart" xsi:type="array">
+                            <item name="component" xsi:type="string">Botgento_Base/js/view/abandon_cart</item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </block>
+    </referenceBlock>
+</page>

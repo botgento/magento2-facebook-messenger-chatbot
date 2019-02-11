@@ -11,6 +11,7 @@
 
 namespace Botgento\Base\Observer;
 
+use Magento\Framework\App\Request\Http;
 use \Magento\Framework\Event\ObserverInterface;
 
 /**
@@ -39,6 +40,10 @@ class QuoteSaveAfter implements ObserverInterface
      * @var \Botgento\Base\Model\ResourceModel\SubscriberMapping\CollectionFactory
      */
     public $subscriberMappingCollectionFactory;
+    /**
+     * @var Http
+     */
+    public $request;
 
     /**
      * @var \Magento\Framework\Stdlib\CookieManagerInterface
@@ -51,17 +56,20 @@ class QuoteSaveAfter implements ObserverInterface
      * @param \Botgento\Base\Model\SubscriberMappingFactory $subscriberMappingFactory
      * @param \Botgento\Base\Model\ResourceModel\SubscriberMapping\CollectionFactory $subscriberMappingCollectionFactory
      * @param \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager
+     * @param Http $request
      */
     public function __construct(
         \Botgento\Base\Helper\Data $helper,
         \Botgento\Base\Model\SubscriberMappingFactory $subscriberMappingFactory,
         \Botgento\Base\Model\ResourceModel\SubscriberMapping\CollectionFactory $subscriberMappingCollectionFactory,
-        \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager
+        \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager,
+        Http $request
     ) {
         $this->helper = $helper;
         $this->subscriberMappingFactory = $subscriberMappingFactory;
         $this->subscriberMappingCollectionFactory = $subscriberMappingCollectionFactory;
         $this->cookieManager = $cookieManager;
+        $this->request = $request;
     }
 
     /**
@@ -74,34 +82,31 @@ class QuoteSaveAfter implements ObserverInterface
 
         if ($moduleEnable) {
             $quote = $observer->getQuote();
-            if ($quote->getId()) {
+
+            if ($quote->getId() && $this->request->getPost('fbmessenger') === "checked") {
                 $quoteId = $quote->getId();
 
                 $uuid = $this->helper->getUuid();
                 $collection = $this->subscriberMappingCollectionFactory->create()
                     ->addFieldToFilter('quote_id', $quoteId)
                     ->addFieldToFilter("uuid", $uuid);
-
-                if (!$collection->getSize()) {
+                $user_ref = $this->request->getPost('user_ref');
+                if ($collection->getSize() == 0) {
                     $subscriberMappingModel = $this->subscriberMappingFactory->create();
                     $subscriberMappingModel->setQuoteId($quoteId);
                     $subscriberMappingModel->setUuid($uuid);
 
                     $cookie = $this->cookieManager->getCookie(\Botgento\Base\Helper\Data::BGC_OPTION_COOKIE_NAME);
                     if (!empty($cookie) && $cookie == 1) {
-                        $subscriberMappingModel->setIsButtonPress(1);
+                        $subscriberMappingModel->setUserRef($user_ref);
                     } else {
-                        $subscriberMappingCollection = $this->subscriberMappingCollectionFactory->create()
-                            ->addFieldToFilter("uuid", $uuid)
-                            ->getLastItem();
-
-                        if ($subscriberMappingCollection->hasData()) {
-                            $subscriberMappingModel->setIsButtonPress($subscriberMappingCollection->getIsButtonPress());
-                        } else {
-                            $subscriberMappingModel->setIsButtonPress(0);
-                        }
+                        $subscriberMappingModel->setUserRef($user_ref);
                     }
 
+                    $subscriberMappingModel->save();
+                } else {
+                    $subscriberMappingModel = $collection->getLastItem();
+                    $subscriberMappingModel->setUserRef($user_ref);
                     $subscriberMappingModel->save();
                 }
             }

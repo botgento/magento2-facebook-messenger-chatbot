@@ -1,0 +1,27 @@
+<div class="fb-checkbox-block" data-bind="scope: 'abandonCart'" data-role="abandon-cart" style="display: none;">
+    <!-- ko if: v().status -->
+    <div class="botgento-check-product" style="width: 100%; font-size: 12px!important;float: left;">
+        <div id="fb-loader" class="fb-loader">
+            <?php echo $this->escapeHtml(__('Please wait...')); ?>
+        </div>
+        <input type="hidden" name="fbmessenger" id="fbmessenger" value=""/>
+        <input type="hidden" name="user_ref" id="user_ref" value=""/>
+        <div class="messenger-title" id="messenger-title" style="display: none">
+            <p><?php echo $this->escapeHtml(__('Send order updates on:')); ?></p>
+            <div data-bind="attr: {
+                    class : 'fb-messenger-checkbox',
+                    origin : v().origin,
+                    page_id : v().page_id,
+                    messenger_app_id : v().app_id,
+                    user_ref : v().user_ref,
+                 }" data-ref="BGC_ABDON-CART"
+                 prechecked="true" allow_login="true" size="small">
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+</div>
+
+<script type="text/x-magento-init">
+{"[data-role=abandon-cart]": {"Magento_Ui/js/core/app": <?php /* @escapeNotVerified */ echo $block->getJsLayout();?>}}
+</script>

@@ -19,3 +19,26 @@
     font-size: 12px;
     margin-bottom: 5px;
 }
+
+#fb-loader {
+    clear: both;
+    position: absolute;
+    z-index: 9999;
+}
+
+.fb-checkbox-block,
+.botgento-instock-alert {
+    position: relative;
+    min-height: 45px;
+}
+
+.botgento-check-product{
+    width: 100%;
+    font-size: 12px!important;
+    float: left;
+    border: 1px solid rgba(204, 204, 204, 0.3);
+    padding: 10px;
+    border-radius: 4px;
+    clear: both;
+    margin-bottom: 10px;
+}

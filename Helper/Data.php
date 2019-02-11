@@ -507,11 +507,11 @@ class Data extends AbstractHelper
                 $imageArr = $this->getImageFromData($item, 'category');
                 $itemArray = [
                     'category_id' => (int)$item->getId(),
-                    'name' => substr($item->getName(), 0, 250),
+                    'name' => mb_convert_encoding($item->getName(), 'HTML-ENTITIES', 'utf-8'),
                     'url_key' => $item->getUrlKey(),
                     'image' => $imageArr['image_url'],
                     'thumbnail' => $imageArr['thumbnail_url'],
-                    'description' => substr(strip_tags($item->getData('description')), 0, 250),
+                    'description' => mb_convert_encoding(strip_tags($item->getData('description')), 'HTML-ENTITIES', 'utf-8'),
                     'url_path' => $this->getUrlPath($item->getUrl())
                 ];
                 if ($refApi == 'catalog.details') {
@@ -717,17 +717,17 @@ class Data extends AbstractHelper
                     'sku'=> $product->getSku(),
                     'product_type' => $product->getTypeId(),
                     'catId' => $product->getCategoryIds(),
-                    'name' => substr($product->getName(), 0, 250),
-                    'description' => substr(strip_tags($product->getData('description')), 0, 250),
-                    'short_description' => substr(strip_tags($product->getData('short_description')), 0, 250),
+                    'name' => mb_convert_encoding($product->getName(), 'HTML-ENTITIES', 'utf-8'),
+                    'description' => mb_convert_encoding(strip_tags($product->getData('description')), 'HTML-ENTITIES', 'utf-8'),
+                    'short_description' => mb_convert_encoding(strip_tags($product->getData('short_description')), 'HTML-ENTITIES', 'utf-8'),
                     'status' => $product->getStatus(),
                     'url_key'=> $product->getUrlKey(),
                     'thumbnail' => $imageArr['thumbnail_url'],
                     'image' => $imageArr['image_url'],
                     'url_path' => $this->getUrlPath($product->getProductUrl()),
                     'currency_code' => $currency->getCode(),
-                    'currency_symbol'=> $currency->getCurrencySymbol(),
-                    'currency_name' => $displayName,
+                    'currency_symbol'=> mb_convert_encoding($currency->getCurrencySymbol(), 'HTML-ENTITIES', 'utf-8'),
+                    'currency_name' => mb_convert_encoding($displayName, 'HTML-ENTITIES', 'utf-8'),
                     'final_price' => $product->getFinalPrice(),
                     'price' => (float) $product->getData('price'),
                     'special_price' => $product->getSpecialPrice(),
@@ -951,7 +951,7 @@ class Data extends AbstractHelper
                     $salesRuleId = $this->coupon->loadByCode($couponCode)->getRuleId();
                     $salesRule = $this->salesRule->load($salesRuleId);
                     $adjustments[] = [
-                        'name' => $salesRule->getName(),
+                        'name' => mb_convert_encoding($salesRule->getName(), 'HTML-ENTITIES', 'utf-8'),
                         'code' => $couponCode,
                         'amount' => $salesRule->getDiscountAmount()
                     ];
@@ -971,7 +971,7 @@ class Data extends AbstractHelper
                             continue;
                         }
 
-                        $adjustments[] = ['name' => $ruleItem->getName(), 'amount' => $ruleItem->getDiscountAmount()];
+                        $adjustments[] = ['name' => mb_convert_encoding($ruleItem->getName(), 'HTML-ENTITIES', 'utf-8'), 'amount' => $ruleItem->getDiscountAmount()];
                         ++$ruleIndex;
                     }
                 }
@@ -992,7 +992,7 @@ class Data extends AbstractHelper
                         $billing->getFirstname() . ' ' .
                         $billing->getLastname(),
                     'order_number' => $item->getIncrementId(),
-                    'currency' => $item->getOrderCurrencyCode(),
+                    'currency' => mb_convert_encoding($item->getOrderCurrencyCode(), 'HTML-ENTITIES', 'utf-8'),
                     'payment_method' => $method,
                     'order_url' => $this->_urlBuilder->getUrl('sales/order') . 'view/order_id/' . $item->getId(),
                     'timestamp' => strtotime($item->getCreatedAt()),
@@ -1133,17 +1133,17 @@ class Data extends AbstractHelper
                     'sku' => $product->getSku(),
                     'product_type' => $product->getTypeId(),
                     'catId' => $product->getCategoryIds(),
-                    'name' => substr($product->getName(), 0, 250),
-                    'description' => substr(strip_tags($product->getData('description')), 0, 250),
-                    'short_description' => substr(strip_tags($product->getData('short_description')), 0, 250),
+                    'name' => mb_convert_encoding($product->getName(), 'HTML-ENTITIES', 'utf-8'),
+                    'description' => mb_convert_encoding(strip_tags($product->getData('description')), 'HTML-ENTITIES', 'utf-8'),
+                    'short_description' => mb_convert_encoding(strip_tags($product->getData('short_description')), 'HTML-ENTITIES', 'utf-8'),
                     'status' => $product->getStatus(),
                     'url_key' => $product->getUrlKey(),
                     'thumbnail' => $imageArr['thumbnail_url'],
                     'image' => $imageArr['image_url'],
                     'url_path' => $this->getUrlPath($product->getProductUrl()),
                     'currency_code' => $currency->getCode(),
-                    'currency_symbol' => $currency->getCurrencySymbol(),
-                    'currency_name' => $displayName,
+                    'currency_symbol' => mb_convert_encoding($currency->getCurrencySymbol(), 'HTML-ENTITIES', 'utf-8'),
+                    'currency_name' => mb_convert_encoding($displayName, 'HTML-ENTITIES', 'utf-8'),
                     'final_price' => $product->getFinalPrice(),
                     'price' => (float) $product->getData('price'),
                     'special_price' => $product->getSpecialPrice(),
@@ -1692,6 +1692,16 @@ class Data extends AbstractHelper
     }
 
     /**
+     * Return Botgento SDK Url
+     *
+     * @return string
+     */
+    public function getBotgentoSdk()
+    {
+        return "https://app.botgento.com/sdk/botgento/" . $this->getHexCode().'.js';
+    }
+
+    /**
      * @return string
      */
     public function getBotgentoUrl()
@@ -1780,6 +1790,83 @@ class Data extends AbstractHelper
     }
 
     /**
+     * @param $url
+     * @return string
+     */
+    public function getOrigin()
+    {
+        $baseUrl = $this->_urlBuilder->getBaseUrl(['_secure' => true]);
+        return $baseUrl;
+    }
+
+    public function getStoreInfo()
+    {
+        $wlist = [];
+        /** @var \Magento\Store\Model\Website $website */
+        foreach ($this->storeManager->getWebsites() as $website) {
+            $groupCollection = $website->getGroupCollection();
+            $defaultGroupId = $website->getDefaultGroupId();
+            $stores = [];
+            /** @var \Magento\Store\Model\Group $storeGroup */
+            foreach ($groupCollection as $storeGroup) { // Stores
+                $storeView = [];
+                $storeCollection = $storeGroup->getStoreCollection();
+                /** @var \Magento\Store\Model\Store $storeViewItem */
+                foreach ($storeCollection as $storeViewItem) { // Store views
+                    $storeView[] = [
+                        'view_name' => $storeViewItem->getName(),
+                        'code' => $storeViewItem->getCode(),
+                        'sort_order' => $storeViewItem->getSortOrder(),
+                        'status' => $storeViewItem->getIsActive(),
+                    ];
+                }
+
+                $stores[] = [
+                    'id' => $storeGroup->getId(),
+                    'store_name' => $storeGroup->getName(),
+                    'default_store_view' => $storeGroup->getDefaultStore()->getCode(),
+                    'store_views' => $storeView
+                ];
+            }
+
+            $wlist[] = [
+                'website_name' => $website->getName(),
+                'website_code' => $website->getCode(),
+                'base_unsecure_url' => $this->scopeConfig->getValue(
+                    'web/unsecure/base_url',
+                    ScopeInterface::SCOPE_WEBSITE,
+                    $website->getId()
+                ),
+                'base_secure_url' => $this->scopeConfig->getValue(
+                    'web/secure/base_url',
+                    ScopeInterface::SCOPE_WEBSITE,
+                    $website->getId()
+                ),
+                'sort_order' => $website->getSortOrder(),
+                'default_store' => $defaultGroupId,
+                'stores' => $stores
+            ];
+        }
+        //Updated to use object manager
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $productMetadata = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
+        $version = $productMetadata->getVersion(); //will return the magento version
+        $response = [
+            'platform' => 'magento',
+            'ver'   => $version,
+            'add_store_code_in_url' => $this->scopeConfig->getValue(
+                'web/url/use_store',
+                ScopeInterface::SCOPE_WEBSITE,
+                $website->getId()
+            ),
+            'lists'=> $wlist,
+            'status'=>'success'
+        ];
+
+        return $response;
+    }
+
+    /**
      * Get customer email from session
      *
      * @return string|null
@@ -1835,7 +1922,7 @@ class Data extends AbstractHelper
         if (!empty($cookie)) {
             return $cookie;
         } else {
-            $uuid = md5($this->getSessionId());
+            $uuid = substr(md5($this->getSessionId()), 0, 16);
 
             $metadata = $this->cookieMetadataFactory->createPublicCookieMetadata()
                 ->setPath($this->_getRequest()->getBasePath())
@@ -1939,7 +2026,7 @@ class Data extends AbstractHelper
             $syncLogModel = $syncLogModel->getLastItem();
             $lastSnycDateTime = date('Y-m-d H:i:s', strtotime($syncLogModel->getCreatedAt()));
         }
-
+        /** @var \Magento\Quote\Model\ResourceModel\Quote\Collection $quoteCollection */
         $quoteCollection = $this->quoteFactory->create()
             ->getCollection()
             ->addFieldToFilter('is_active', 1)
@@ -2020,20 +2107,19 @@ class Data extends AbstractHelper
                 );
             }
         }
+        $subscriberTable = $quoteCollection->getTable('al_botgento_subscriber_quote_mapping');
+        $quoteCollection->join(['sub2' => $subscriberTable], 'entity_id = sub2.quote_id AND sub2.uuid != ""', ['uuid', 'user_ref']);
 
         foreach ($quoteCollection as $quote) {
             $baseCurrencyCode = $quote->getBaseCurrencyCode();
 
-            $subscriberMappingCollection = $this->subscriberMappingCollectionFactory->create()
-                ->addFieldToFilter("quote_id", $quote->getId())
-                ->getLastItem();
-
-            if ($subscriberMappingCollection->hasData() && $subscriberMappingCollection->getIsButtonPress() == 1) {
+            if ($quote->hasData() && $quote->getUserRef()) {
                 foreach ($attributeArray as $value) {
                     $tempData[$value] = $quote->getData($value);
                 }
 
-                $tempData['bgc_uuid'] = $subscriberMappingCollection->getUuid();
+                $tempData['bgc_uuid'] = $quote->getUuid();
+                $tempData['user_ref'] = $quote->getUserRef();
 
                 $itemCollection = $quote->getItemsCollection();
                 $itemCollection->addFieldToFilter('parent_item_id', ['null' => true]);
@@ -2058,8 +2144,8 @@ class Data extends AbstractHelper
                         "created_at" => $item->getCreatedAt(),
                         "updated_at" => $item->getUpdatedAt(),
                         "sku" => $item->getSku(),
-                        "name" => $item->getName(),
-                        "short_description" => substr(strip_tags($product->getShortDescription()), 0, 250),
+                        "name" => mb_convert_encoding($item->getName(), 'HTML-ENTITIES', 'utf-8'),
+                        "short_description" => mb_convert_encoding(strip_tags($product->getShortDescription()), 'HTML-ENTITIES', 'utf-8'),
                         "qty" => $item->getQty(),
                         "price" => number_format($item->getBasePrice(), 2),
                         "final_price" => number_format($product->getFinalPrice(), 2),
@@ -2071,7 +2157,7 @@ class Data extends AbstractHelper
                         "image" => $imageArr['image_url'],
                         "url_path" => $urlPath,
                         "currency_code" => $baseCurrencyCode,
-                        "currency_symbol" => $this->localeCurrency->getCurrency($baseCurrencyCode)->getSymbol(),
+                        "currency_symbol" => mb_convert_encoding($this->localeCurrency->getCurrency($baseCurrencyCode)->getSymbol(), 'HTML-ENTITIES', 'utf-8'),
                     ];
 
                     $extraProductAttributes = array_diff($cartItemsArray, array_keys($productData));
@@ -2170,17 +2256,17 @@ class Data extends AbstractHelper
                         "sku" => $product->getSku(),
                         "product_type" => $product->getTypeID(),
                         "catId" => $product->getCategoryIds(),
-                        "name" => $product->getName(),
-                        "description" => substr(strip_tags($product->getDescription()), 0, 250),
-                        "short_description" => substr(strip_tags($product->getShortDescription()), 0, 250),
+                        "name" => mb_convert_encoding($product->getName(), 'HTML-ENTITIES', 'utf-8'),
+                        "description" => mb_convert_encoding(strip_tags($product->getDescription()), 'HTML-ENTITIES', 'utf-8'),
+                        "short_description" => mb_convert_encoding(strip_tags($product->getShortDescription()), 'HTML-ENTITIES', 'utf-8'),
                         "status" => $product->getStatus(),
                         "url_key" => $product->getUrlKey(),
                         "thumbnail" => $imageArr['thumbnail_url'],
                         "image" => $imageArr['image_url'],
                         "url_path" => $urlPath,
                         "currency_code" => $currencyCode,
-                        "currency_symbol" => $currencySym,
-                        "currency_name" => $currencyName,
+                        "currency_symbol" => mb_convert_encoding($currencySym, 'HTML-ENTITIES', 'utf-8'),
+                        "currency_name" => mb_convert_encoding($currencyName, 'HTML-ENTITIES', 'utf-8'),
                         "price" => number_format($product->getPrice(), 2),
                         "final_price" => number_format($product->getFinalPrice(), 2),
                         "special_price" => number_format($product->getSpecialPrice(), 2),
@@ -2206,19 +2292,25 @@ class Data extends AbstractHelper
 
         return $this->pageTitle->getShort();
     }
-    
+
     /**
      * Generate bgc value
      *
+     * @param null $ref_url
      * @return string
      */
-    public function genBGCValue()
+    public function genBGCValue($ref_url = null)
     {
         $customerEmail = $this->getCustomerEmail();
 
         $uuid = $this->getUuid();
 
         $currentUri = $this->getCurrentUri();
+
+        // For in stock alert section
+        if (!empty($ref_url)) {
+            $currentUri = $ref_url;
+        }
 
         $curentPageTitle = '';
         $curentPageTitle = $this->getPageTitle();
@@ -2323,5 +2415,19 @@ class Data extends AbstractHelper
             return $imageUrl;
         }
         return ['thumbnail_url' => $thumbnail, 'image_url' => $imageUrl];
+    }
+
+    public function generateUserRef($pageArr = [])
+    {
+
+        $pageArr = ['unique_chr' => rand(100000, 999999)] + $pageArr;
+        $bgcUserRef = 'bgcfbopt-' . $this->getUuid() . '-'; //get from the session
+        $encryptMethod = "AES-256-CBC";
+        $encryptionKey = $this->getApiTokenByWebsiteId($this->getWebsiteId()); //Website ApiKey: base_options/botgento/api_key
+        $secretIv = $this->getWebsiteHash(); //Website hashKey: botgento/website/hash
+        $key = hash('sha256', $encryptionKey);
+        $iv = substr(hash('sha256', $secretIv), 0, 16);
+        $bgcUserRef .= openssl_encrypt(json_encode($pageArr), $encryptMethod, $key, 0, $iv);
+        return $bgcUserRef;
     }
 }

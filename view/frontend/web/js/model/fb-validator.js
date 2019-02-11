@@ -7,7 +7,7 @@
 /**
  * Copyright © 2017 Botgento. All rights reserved.
  */
-
+/* global define, bgcClass */
 define(
     [
         'jquery',
@@ -29,27 +29,17 @@ define(
                 var validationResult = true;
                 var paymentForm = $('#co-payment-form');
                 if (paymentForm.validate().errorList.length < 1) {
-                    var storage = registry.get('localStorage');
-                    if (storage.get('fb_state') === 'checked' &&
-                        storage.get('recipient_id') &&
-                        !storage.get('subscribed') && typeof FB === 'object') {
-                        FB.AppEvents.logEvent('MessengerCheckboxUserConfirmation', null, {
-                            'app_id':storage.get('app_id'),
-                            'page_id':storage.get('page_id'),
-                            'ref':'shopping-cart-company',
-                            'user_ref':storage.get('recipient_id')
-                        });
-                    }
-                    if (storage.get('subscribed') === 1) {
-                        storage.set('fb_state','checked');
+                    if (jQuery('#fbmessenger').length && jQuery('#user_ref').length) {
+                        var state = jQuery('#fbmessenger').val();
+                        var user_ref = jQuery('#user_ref').val();
+                        var subscribed = parseInt(jQuery('#subscribed').val());
+                        if (state === 'checked' &&
+                            user_ref &&
+                            !subscribed) {
+                            // bgcClass.bgcUserCheckboxConfirm('MessengerCheckboxUserConfirmation', user_ref);
+                        }
                     }
                 }
-                /*var emailValidationResult = customer.isLoggedIn(),
-                    loginFormSelector = 'form[data-role=email-with-possible-login]';
-                    if (!customer.isLoggedIn()) {
-                    $(loginFormSelector).validation();
-                    emailValidationResult = Boolean($(loginFormSelector + ' input[name=username]').valid());
-                }*/
 
                 return validationResult;
             }

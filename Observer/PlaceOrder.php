@@ -193,20 +193,11 @@ class PlaceOrder implements ObserverInterface
      * @return $this|void
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(Observer $observer)
     {
         $helper = $this->helper;
         $websiteId = $this->store->getStore()->getWebsiteId();
-        $status = $this->scopeConfig->getValue(
-            $helper->getStatusPath(),
-            ScopeInterface::SCOPE_WEBSITE,
-            $websiteId
-        );
-        $valid = $this->scopeConfig->getValue(
-            $helper->getValidPath(),
-            ScopeInterface::SCOPE_WEBSITE,
-            $websiteId
-        );
+        $status = $this->helper->getModuleIsEnableAndValid();
         $snd_cnf = $this->scopeConfig->getValue(
             $helper->getSendOrderCnfPath(),
             ScopeInterface::SCOPE_WEBSITE,
@@ -218,7 +209,7 @@ class PlaceOrder implements ObserverInterface
             $websiteId
         );
         // check status
-        if ($status && $snd_cnf && $valid) {
+        if ($status && $snd_cnf) {
             $req = json_decode(file_get_contents("php://input"), true);
             $api_token = $this->scopeConfig->getValue(
                 $helper->getApiTokenPath(),
@@ -231,7 +222,7 @@ class PlaceOrder implements ObserverInterface
             if ($req['fbState'] != 'checked') {
                 return;
             }
-            if (!isset($req['recipientId'])) {
+            if (!isset($req['user_ref'])) {
                 return;
             }
             /** @var \Magento\Quote\Model\QuoteManagement $event */
@@ -246,14 +237,8 @@ class PlaceOrder implements ObserverInterface
                 /** @var \Magento\Catalog\Model\Product $prd */
                 $product = $this->productRepository->getById($item->getProductId());
                 $itemArray[] = [
-                    'title' => substr($prdTitle, 0, 250),
-                    'subtitle' => !empty($product->getDescription())
-                        ? substr(
-                            explode("\n", strip_tags($product->getDescription()))[0],
-                            0,
-                            250
-                        )
-                        : $product->getName(),
+                    'title' => mb_convert_encoding($prdTitle, 'HTML-ENTITIES', 'utf-8'),
+                    'subtitle' => !empty($product->getDescription()) ? mb_convert_encoding(explode("\n", strip_tags($product->getDescription()))[0], 'HTML-ENTITIES', 'utf-8') : mb_convert_encoding($product->getName(), 'HTML-ENTITIES', 'utf-8'),
                     'quantity' => abs($item->getQtyOrdered()),
                     'price' => $price,
                     'currency' => 'USD',
@@ -275,7 +260,7 @@ class PlaceOrder implements ObserverInterface
                 $salesRuleId = $this->coupon->loadByCode($couponCode)->getRuleId();
                 $salesRule = $this->salesRule->load($salesRuleId);
                 $adjustments[] = [
-                    'name' => $salesRule->getName(),
+                    'name' => mb_convert_encoding($salesRule->getName(), 'HTML-ENTITIES', 'utf-8'),
                     'amount' => abs($order->getDiscountAmount())];
                 ++$ruleIndex;
             }
@@ -310,9 +295,9 @@ class PlaceOrder implements ObserverInterface
             $region = !empty($region) ? $region : $countryName;
             $payLoad = [
                 'template_type' => 'receipt',
-                'recipient_name' => $billing->getPrefix() .
+                'recipient_name' => mb_convert_encoding($billing->getPrefix() .
                     $billing->getFirstname() . ' ' .
-                    $billing->getLastname(),
+                    $billing->getLastname(), 'HTML-ENTITIES', 'utf-8'),
                 'order_number' => $order->getIncrementId(),
                 'currency' => $order->getOrderCurrencyCode(),
                 'payment_method' => $method,
@@ -339,33 +324,26 @@ class PlaceOrder implements ObserverInterface
             }
             $recipientObj = $this->recipientRepository->getByCustomerEmail($order->getCustomerEmail());
             /** Prepare curl request */
-            $message = '';
             $hexCode = $this->scopeConfig->getValue(
                 $helper->getHexCodePath(),
                 ScopeInterface::SCOPE_WEBSITE,
                 $websiteId
             );
-            $recipient_id = $req['recipientId'];
+            $recipient_id = $req['user_ref'];
             $isPrimary = !$order->getCustomerIsGuest();
             //already subscribed
             $postData = ["payload" => __('Thank You for your order.'),
                 "email" => $order->getCustomerEmail(),
                 "quote_id" => $order->getQuoteId(),
                 'is_primary' => (int)$isPrimary,
-                "user_ref" => $req['recipientId']];
+                "user_ref" => $req['user_ref']];
             $this->curl->addHeader('Authorization', 'Bearer ' . $api_token);
 
             $apiurl = $this->helper->getApiUrl($hexCode, 'checkbox-checked');
             $this->curl->post($apiurl, $postData);
 
-            if ($this->curl->getBody()) {
-                $data = json_decode($this->curl->getBody(), true);
-                if (isset($data['data']['recepient_id'])) {
-                    $recipient_id = $data['data']['recepient_id'];
-                }
-            }
             $payLoadData['payload'] = json_encode($payLoad);
-            $payLoadData['user_ref'] = $req['recipientId'];
+            $payLoadData['user_ref'] = $req['user_ref'];
             $payLoadData['email'] = $order->getCustomerEmail();
             $cronLog = $this->cronLogFactory->create();
             /** @var /Botgento/Base/Model/CronLog $cronLog */

@@ -44,6 +44,10 @@ class SendCookieDataToBotgento implements ObserverInterface
      * @var \Magento\Framework\Stdlib\CookieManagerInterface
      */
     protected $cookieManager;
+    /**
+     * @var \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
+     */
+    private $cookieMetadataFactory;
 
     /**
      * SendCookieDataToBotgento constructor.
@@ -56,12 +60,14 @@ class SendCookieDataToBotgento implements ObserverInterface
         \Botgento\Base\Helper\Data $helper,
         \Magento\Framework\HTTP\Client\Curl $curl,
         \Magento\Framework\Locale\CurrencyInterface $localeCurrency,
-        \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager
+        \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager,
+        \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory
     ) {
         $this->helper = $helper;
         $this->curl = $curl;
         $this->localeCurrency = $localeCurrency;
         $this->cookieManager = $cookieManager;
+        $this->cookieMetadataFactory = $cookieMetadataFactory;
     }
 
     /**
@@ -93,6 +99,7 @@ class SendCookieDataToBotgento implements ObserverInterface
                 $data = [];
                 $data['type'] = 'abandoned-cart';
                 $data['customer_email'] = $order->getCustomerEmail();
+                $data['customer_name'] = $order->getCustomerName();
                 $data['order_id'] = $order->getIncrementId();
                 $data['order_amount'] = $order->getBaseGrandTotal();
                 $data['subtotal'] = $order->getBaseSubtotal();
@@ -114,9 +121,15 @@ class SendCookieDataToBotgento implements ObserverInterface
                 $result = json_decode($response, true);
 
                 if (is_array($result) && $result['status'] == 'success') {
-                    foreach ($bgUtmCookies as $cookieName => $cookieValue) {
-                        $this->cookieManager->deleteCookie($cookieName);
-                    }
+                    $metadata = $this->cookieMetadataFactory->createPublicCookieMetadata()
+                        ->setPath('/')
+                        ->setDuration(86400*7);
+                    $this->cookieManager->setPublicCookie('bg_utm_status', 1, $metadata);
+                } else {
+                    $metadata = $this->cookieMetadataFactory->createPublicCookieMetadata()
+                        ->setPath('/')
+                        ->setDuration(86400*7);
+                    $this->cookieManager->setPublicCookie('bg_utm_status', 0, $metadata);
                 }
             }
         }

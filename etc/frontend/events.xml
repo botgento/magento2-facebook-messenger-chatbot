@@ -19,4 +19,7 @@
     <event name="load_customer_quote_before">
         <observer name="botgento_load_customer_quote_before" instance="Botgento\Base\Observer\LoadCustomerQuoteBefore" />
     </event>
+    <event name="sales_order_place_after">
+        <observer name="botgento_order_place_after_send_cookie_data" instance="Botgento\Base\Observer\SendCookieDataToBotgento" />
+    </event>
 </config>

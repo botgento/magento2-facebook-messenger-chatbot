@@ -21,6 +21,14 @@ use Magento\Setup\Exception;
 class Index extends Action
 {
     /**
+     * @var \Magento\Store\Model\StoreRepository
+     */
+    public $store_repository;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    public $storeManager;
+    /**
      * @var \Magento\Framework\Controller\Result\JsonFactory
      */
     private $resultJsonFactory;
@@ -40,16 +48,23 @@ class Index extends Action
      * @param Context $context
      * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
      * @param \Botgento\Base\Helper\Data $helper
+     * @param \Botgento\Base\Helper\Api $apiHelper
+     * @param \Magento\Store\Model\StoreRepository $store_repository
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
         Context $context,
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
         \Botgento\Base\Helper\Data $helper,
-        \Botgento\Base\Helper\Api $apiHelper
+        \Botgento\Base\Helper\Api $apiHelper,
+        \Magento\Store\Model\StoreRepository $store_repository,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->helper = $helper;
         $this->apiHelper = $apiHelper;
+        $this->store_repository = $store_repository;
+        $this->storeManager = $storeManager;
 
         parent::__construct($context);
     }
@@ -82,6 +97,16 @@ class Index extends Action
                     if (isset($options)) {
                         $this->getRequest()->setParams($options);
                     }
+                    $requestedStoreCode = $this->getRequest()->getParam('store_code');
+                    if (!empty($requestedStoreCode)) {
+                        try {
+                            $storeId = $this->store_repository->get($requestedStoreCode)->getId();
+                            $this->storeManager->setCurrentStore($storeId);
+                        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+                            // Do nothing
+                        }
+                    }
+
                     $type = $this->getRequest()->getParam('type', '');
                     $limit = $this->getRequest()->getParam('limit', 20);
                     $offset = $this->getRequest()->getParam('offset', 0);
@@ -149,6 +174,8 @@ class Index extends Action
                     } elseif ($type == 'quote.orders') {
                         $options = $this->getRequest()->getParam('options');
                         $data = $helper->getOrderStatusFromQuote($options);
+                    } elseif ($type == 'store.info') {
+                        $data = $helper->getStoreInfo();
                     } else {
                         $data['status'] = 'error';
                         $data['error'] = 'Invalid Api requests';
