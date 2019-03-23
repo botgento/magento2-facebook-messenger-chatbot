@@ -8,10 +8,6 @@
 /**
  * Copyright © 2017 Botgento. All rights reserved.
  */
-$helper = $this->helper('Botgento\Base\Helper\Data');
-$moduleEnable = $helper->getModuleIsEnableAndValid();
-
-if ($moduleEnable) {
 ?>
 <div class="fb_message_button" data-bind="scope:'botgento-analysis'">
     <div id="main_body" data-bind="html: button"></div>
@@ -23,5 +19,3 @@ if ($moduleEnable) {
     }
 }
 </script>
-
-<?php } ?>

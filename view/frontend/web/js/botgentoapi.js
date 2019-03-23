@@ -16,7 +16,7 @@ define([
     return Component.extend({
         botgentoApi: ko.observable(false),
         changed: ko.observable(false),
-        script: '',
+        script: ko.observable(''),
         /** @inheritdoc */
         initialize: function () {
             var self = this;
@@ -33,6 +33,7 @@ define([
                     bgc_uuid = self.botgentoApi().bgc_uuid;
                     bgc_csrf = self.botgentoApi().bgc_csrf;
                     bgc = self.botgentoApi().bgc;
+                    self.script('<script type="text/javascript" src="{websiteSDK}" async="async"></script>'.replace('{websiteSDK}', self.botgentoApi().websiteSDK));
                 });
             setBgc = function () {
                 if (self.botgentoApi().status === false) {

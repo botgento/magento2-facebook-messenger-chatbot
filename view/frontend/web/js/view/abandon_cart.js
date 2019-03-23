@@ -30,7 +30,7 @@ define([
                         var lazyCart = _.debounce(self.confirmOptIn, 300).bind(self);
 
                         self.v(data['abandon-cart']);
-                        $('.fb-checkbox-block').show();
+                        $('.botgento-check-product').show();
 
                         jQuery(document).on('click', '#product_addtocart_form [type="submit"]', function () {
                                 if (jQuery('#product_addtocart_form').valid()) { 

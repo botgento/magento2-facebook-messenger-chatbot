@@ -1,22 +1,31 @@
-<div class="fb-checkbox-block" data-bind="scope: 'abandonCart'" data-role="abandon-cart" style="display: none;">
+<?php
+/**
+ * @author Botgento Team
+ * @copyright Copyright (c) 2017 Botgento (https://www.botgento.com)
+ * @package Botgento_Base
+ */
+
+/**
+ * Copyright © 2017 Botgento. All rights reserved.
+ */
+?>
+<div class="botgento-check-product" data-bind="scope: 'abandonCart'" data-role="abandon-cart" style="display: none;">
     <!-- ko if: v().status -->
-    <div class="botgento-check-product" style="width: 100%; font-size: 12px!important;float: left;">
-        <div id="fb-loader" class="fb-loader">
-            <?php echo $this->escapeHtml(__('Please wait...')); ?>
-        </div>
-        <input type="hidden" name="fbmessenger" id="fbmessenger" value=""/>
-        <input type="hidden" name="user_ref" id="user_ref" value=""/>
-        <div class="messenger-title" id="messenger-title" style="display: none">
-            <p><?php echo $this->escapeHtml(__('Send order updates on:')); ?></p>
-            <div data-bind="attr: {
+    <div id="fb-loader" class="fb-loader">
+        <?php echo $this->escapeHtml(__('Please wait...')); ?>
+    </div>
+    <input type="hidden" name="fbmessenger" id="fbmessenger" value=""/>
+    <input type="hidden" name="user_ref" id="user_ref" value=""/>
+    <div class="messenger-title" id="messenger-title" style="display: none">
+        <p><?php echo $this->escapeHtml(__('Send order updates on:')); ?></p>
+        <div data-bind="attr: {
                     class : 'fb-messenger-checkbox',
                     origin : v().origin,
                     page_id : v().page_id,
                     messenger_app_id : v().app_id,
                     user_ref : v().user_ref,
                  }" data-ref="BGC_ABDON-CART"
-                 prechecked="true" allow_login="true" size="small">
-            </div>
+             prechecked="true" allow_login="true" size="small">
         </div>
     </div>
     <!-- /ko -->

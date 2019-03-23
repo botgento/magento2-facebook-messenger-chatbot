@@ -22,14 +22,20 @@ use \Magento\Framework\Event\ObserverInterface;
 class SaveConfig implements ObserverInterface
 {
     /**
+     * @var \Magento\Framework\App\Cache\TypeListInterface
+     */
+    public $type_list;
+    /**
      * @var \Botgento\Base\Helper\Data
      */
     protected $helper;
 
     public function __construct(
-        Helper $helper
+        Helper $helper,
+        \Magento\Framework\App\Cache\TypeListInterface $type_list
     ) {
         $this->helper = $helper;
+        $this->type_list = $type_list;
     }
     /**
      * @param Observer $observer
@@ -39,5 +45,7 @@ class SaveConfig implements ObserverInterface
         $event = $observer->getEvent();
 
         $this->helper->sendStatus((int) $event->getWebsite());
+
+        $this->type_list->cleanType('config');
     }
 }

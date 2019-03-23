@@ -11,13 +11,19 @@ class FbButton extends AbstractSection
      */
     public function getSectionData()
     {
+        if ($this->getHelper()->getModuleIsEnableAndValid()) {
+            return [
+                'status' => $this->getHelper()->getModuleIsEnableAndValid(),
+                'bgc' => $this->getHelper()->genBGCValue(),
+                'bgc_uuid' => $this->getHelper()->getUuid(),
+                'bgc_csrf' => $this->getHelper()->getApiToken(),
+                'bgc_url' => $this->getUrl('botgento/demo/bgc'),
+                'hash' => $this->getHelper()->getWebsiteHash(),
+                'websiteSDK' => $this->getHelper()->getBotgentoSdk()
+            ];
+        }
         return [
-            'status'    => $this->getHelper()->getModuleIsEnableAndValid(),
-            'bgc'      => $this->getHelper()->genBGCValue(),
-            'bgc_uuid' => $this->getHelper()->getUuid(),
-            'bgc_csrf' => $this->getHelper()->getApiToken(),
-            'bgc_url'   => $this->getUrl('botgento/demo/bgc'),
-            'hash'      => $this->getHelper()->getWebsiteHash(),
+            'status' => false
         ];
     }
 }
