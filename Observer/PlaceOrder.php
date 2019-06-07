@@ -287,7 +287,12 @@ class PlaceOrder implements ObserverInterface
                 $method = $this->cardTypeTranslationMap[$order->getPayment()->getCcType()] . ' ';
                 $method .= $order->getPayment()->getCcLast4();
             } else {
-                $method = $this->cardTypeTranslationMap[$method];
+                $payment = $order->getPayment();
+                if (\method_exists($payment, 'getMethodInstance')) {
+                    $method = $order->getPayment()->getMethodInstance()->getTitle();
+                } else {
+                    $method = ucfirst($order->getPayment()->getMethod());
+                }
             }
             $billing = $order->getBillingAddress();
             $countryName = $this->countryFactory->create()->loadByCode($billing->getCountryId())->getName();

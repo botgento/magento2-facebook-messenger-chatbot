@@ -40,4 +40,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Framework\App\Request\CsrfValidator">
+        <plugin name="csrf_validator_skip_for_botgento_api" type="Botgento\Base\Plugin\CsrfValidatorSkipForBotgentoApi" />
+    </type>
 </config>

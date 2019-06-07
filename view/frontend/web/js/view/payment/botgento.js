@@ -49,6 +49,10 @@ define(
                         }, 5000);
                     }
                 }, 300);
+                if (self.subscribed) {
+                    self.user_ref = config.user_ref;
+                    self.fb_state = 'checked';
+                }
             }
         });
     }

@@ -27,6 +27,7 @@ define([
                     jQuery.ajaxSetup({cache: true});
 
                     if (data['in-stock'].status) {
+                        window.isBgcStockAlert = 1;
                         self.v(data['in-stock']);
                         $('.botgento-instock-alert').show();
                     } else {

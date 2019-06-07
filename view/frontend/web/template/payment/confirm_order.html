@@ -11,16 +11,16 @@
 <!-- ko if: status -->
 <form data-role="botgento_order" method="post" data-bind="fadeVisible: isVisible()">
     <div class="col-md-12">
-        <!-- ko if: subscribed != '1' -->
+        <!-- ko if: subscribed != true -->
         <h2><!-- ko i18n:'Send order updates on:' --><!-- /ko --></h2>
-        <!-- /ko -->
         <div id="fb-loader" class="fb-loader">
             <img src="" data-bind="attr: { src: loaderImg }" style="width: 48px;"/>
         </div>
-        <input type="hidden" name="fbmessenger" id="fbmessenger" value=""/>
-        <input type="hidden" name="user_ref" id="user_ref" value="" />
+        <!-- /ko -->
+        <input type="hidden" name="fbmessenger" id="fbmessenger" value="" data-bind="value: fb_state"/>
+        <input type="hidden" name="user_ref" id="user_ref" value="" data-bind="value: user_ref"/>
         <input type="hidden" name="subscribed" id="subscribed" value="" data-bind="value: subscribed" />
-        <!-- ko if: subscribed != '1' -->
+        <!-- ko if: subscribed != true -->
         <div class="fb-messenger-checkbox"
                 data-bind="attr: {
                     origin : origin,
@@ -30,8 +30,6 @@
                  }" data-ref="BGC_ORDER-UPDATE"
              prechecked="true" allow_login="true" size="small">
         </div>
-        <!--<div class="fb-messenger-checkbox" data-ref="BGC_ORDER-UPDATE" prechecked="true" allow_login="true" size="small" origin="https://m2.aureatelabshq.com/default/" page_id="120399958683647" messenger_app_id="502315556802559" user_ref="bgcfbopt-dc33d824480b525d-uF7+n3Y2PnfuDDPOwxVpgHcuZiPST6d9lfBKMcHZrvxGcvZd+47w7z1IAHyRfec5T5QpYal0oWjzRt9y1Npi8QJsBv9RYuaTN19C9jxFMyfaB99vfBspQu8eqELTvd4QaxmTGOEYAXBtOMBnLm/Khw==">
-        </div>-->
         <!-- /ko -->
     </div>
 </form>

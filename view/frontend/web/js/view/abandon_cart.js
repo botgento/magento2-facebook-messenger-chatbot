@@ -37,6 +37,8 @@ define([
                                      lazyCart() 
                                 }
                         });
+                        jQuery('.botgento-check-product #user_ref').insertAfter('#product_addtocart_form [name="form_key"]');
+                        jQuery('.botgento-check-product #fbmessenger').insertAfter('#product_addtocart_form [name="form_key"]');
                     } else {
                         self.v({origin:'',page_id:'',app_id:'',user_ref:'', class:''})
                     }

@@ -29,7 +29,9 @@ class InStockAlert extends AbstractSection
                     'data_ref' => 'INSTOCK_' . $this->getHelper()->genBGCValue($this->redirect->getRefererUrl()),
                     'cta_text' => $this->getHelper()->getConfig(Data::INSTOCK_BUTTON_TEXT),
                     'size' => $this->getHelper()->getConfig(Data::INSTOCK_BUTTON_SIZE),
-                    'color' => $this->getHelper()->getConfig(Data::INSTOCK_BUTTON_COLOR)
+                    'color' => $this->getHelper()->getConfig(Data::INSTOCK_BUTTON_COLOR),
+                    'url' => $this->getHelper()->getConfigValue('web/unsecure/base_url') . 'botgento/instock/alert',
+                    'bgc_uuid' => $this->getHelper()->getUuid(),
                 ];
             }
         }
